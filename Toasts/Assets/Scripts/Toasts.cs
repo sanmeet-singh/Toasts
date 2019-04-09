@@ -13,7 +13,13 @@ namespace UnityToasts
         public const string TOASTS_BG = "ToastBG";
         public const string DEFAULT_FONT_NAME = "Arial.ttf";
 
-        public static void CreateToast(string displayText)
+        public enum ToastDuration
+        {
+            Short,
+            Long
+        }
+
+        public static void CreateToast(string displayText, ToastDuration toastDuration)
         {
             Transform canvas = CreateCanvas().transform;
 
@@ -23,7 +29,7 @@ namespace UnityToasts
             GameObject textGO = CreateText(parentGO.transform, displayText);
 
             Toast toast = parentGO.AddComponent<Toast>();
-            toast.StartAnimation(textGO, backgroundGO);
+            toast.StartAnimation(textGO, backgroundGO, toastDuration);
         }
 
         private static GameObject CreateToastGameObject(Transform parent)
@@ -48,7 +54,7 @@ namespace UnityToasts
             rectTransform.localPosition = new Vector3(0, 0, 0);
 
             Image image = backgroundGO.AddComponent<Image>();
-            image.color = Color.red;
+            image.color = Color.yellow;
 
             return backgroundGO;
         }
@@ -64,6 +70,7 @@ namespace UnityToasts
 
             Text text = textGO.AddComponent<Text>();
             text.text = displayText;
+            text.color = Color.black;
             text.font = Resources.GetBuiltinResource(typeof(Font), DEFAULT_FONT_NAME) as Font;
 
             return textGO;

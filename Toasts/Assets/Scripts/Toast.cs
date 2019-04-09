@@ -7,15 +7,27 @@ namespace UnityToasts
 {
     public class Toast : MonoBehaviour
     {
-        private GameObject toastName;
-        private GameObject toastBG;
+        public const float ALPHA_REDUCTION_VALUE_SHORT = 0.01f;
+        public const float ALPHA_REDUCTION_VALUE_LONG = 0.03f;
+
+        //private GameObject toastTextGO;
+        //private GameObject toastBG;
+
+        private Image bgImage;
+
+        private Text textBox;
 
         private bool animate;
 
-        internal void StartAnimation(GameObject toastName, GameObject toastBG)
+        private float newAlpha;
+        private float alphaReductionValue;
+
+        internal void StartAnimation(GameObject toastTextGO, GameObject toastBG, Toasts.ToastDuration toastDuration)
         {
-            this.toastName = toastName;
-            this.toastBG = toastBG;
+            this.textBox = toastTextGO.GetComponent<Text>();
+            this.bgImage = toastBG.GetComponent<Image>();
+
+            this.alphaReductionValue = toastDuration == Toasts.ToastDuration.Short ? ALPHA_REDUCTION_VALUE_SHORT : ALPHA_REDUCTION_VALUE_LONG;
 
             animate = true;
         }
@@ -24,13 +36,13 @@ namespace UnityToasts
         {
             if (animate)
             {
-                Image image = this.toastBG.GetComponent<Image>();
-                image.color = new Color(image.color.r, image.color.g, image.color.b, (image.color.a - 0.01f));
+                this.newAlpha = (this.bgImage.color.a - this.alphaReductionValue);
 
-                Text text = this.toastName.GetComponent<Text>();
-                text.color = new Color(text.color.r, text.color.g, text.color.b, (text.color.a - 0.01f));
+                this.bgImage.color = new Color(this.bgImage.color.r, this.bgImage.color.g, this.bgImage.color.b, this.newAlpha);
 
-                if (image.color.a <= 0)
+                this.textBox.color = new Color(this.textBox.color.r, this.textBox.color.g, this.textBox.color.b, this.newAlpha);
+
+                if (this.newAlpha <= 0)
                 {
                     animate = false;
                     Destroy(this.gameObject);
