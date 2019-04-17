@@ -23,13 +23,8 @@ namespace UnityToasts
 
             GameObject parentGO = CreateToastGameObject(canvas);
 
-            //GameObject backgroundGO = CreateBG(parentGO.transform);
-            //GameObject textGO = CreateText(parentGO.transform, displayText);
-
-            //UpdateDimensions(backgroundGO);
-
             Toast toast = parentGO.AddComponent<Toast>();
-            toast.StartAnimation(displayText, toastDuration);
+            toast.DisplayToast(displayText, toastDuration);
         }
 
         private static GameObject CreateToastGameObject(Transform parent)
@@ -54,7 +49,9 @@ namespace UnityToasts
             verticalLayoutGroup.childForceExpandHeight = false;
 
             Image image = toastGO.AddComponent<Image>();
-            image.color = Color.yellow;
+            Color bgColor = Color.yellow;
+            bgColor.a = 0;
+            image.color = bgColor;
 
             return toastGO;
         }
@@ -72,35 +69,8 @@ namespace UnityToasts
             Image image = backgroundGO.AddComponent<Image>();
             image.color = Color.yellow;
 
-            ////Content size fitter
-            //ContentSizeFitter contentSizeFitter = backgroundGO.AddComponent<ContentSizeFitter>();
-            //contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-            //contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
-
-            //////Horizontal layout
-            //VerticalLayoutGroup verticalLayoutGroup = backgroundGO.AddComponent<VerticalLayoutGroup>();
-            //verticalLayoutGroup.childControlWidth = true;
-            //verticalLayoutGroup.childControlHeight = true;
-            //verticalLayoutGroup.childForceExpandWidth = false;
-            //verticalLayoutGroup.childForceExpandHeight = false;
-
             return backgroundGO;
         }
-
-        //private static void UseTextGenerator(string displayText, TextGenerationSettings settings, RectTransform textBox)
-        //{
-        //    //TextGenerationSettings settings = new TextGenerationSettings();
-        //    //settings.color = Color.black;
-        //    //settings.font = Resources.GetBuiltinResource(typeof(Font), DEFAULT_FONT_NAME) as Font;
-        //    //settings.fontSize = 18;
-        //    ////settings.
-        //    //settings.generateOutOfBounds = true;
-        //    //settings.horizontalOverflow = HorizontalWrapMode.Overflow;
-        //    ////settings.resizeTextForBestFit = true;
-        //    //settings.verticalOverflow = VerticalWrapMode.Overflow;
-        //    TextGenerator textGenerator = new TextGenerator();
-        //    Debug.Log("TG : " + textGenerator.GetPreferredWidth(displayText, settings) + " : " + textGenerator.GetPreferredHeight(displayText, settings));
-        //}
 
         private static GameObject CreateCanvas()
         {

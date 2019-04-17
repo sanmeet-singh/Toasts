@@ -10,34 +10,31 @@ namespace UnityToasts
 {
     public class Toast : MonoBehaviour
     {
-        public const float ALPHA_REDUCTION_VALUE_SHORT = 0.01f;
-        public const float ALPHA_REDUCTION_VALUE_LONG = 0.03f;
+        public const float DURATION_SHORT = 2f;
+        public const float DURATION_LONG = 4f;
 
         public const string TOASTS_TEXT = "ToastText";
         public const string DEFAULT_FONT_NAME = "Arial.ttf";
 
-        //private GameObject toastTextGO;
-        //private GameObject toastBG;
-
-        //private Image bgImage;
-
         private Text textBox;
 
-        private GameObject textGO;
+        private AnimationState animationState;
 
-        private bool animate;
-
-        private float newAlpha;
-        private float alphaReductionValue;
-
-        internal void StartAnimation(string displayText, Toasts.ToastDuration toastDuration)
+        private enum AnimationState
         {
-            //this.textBox = toastTextGO.GetComponent<Text>();
-            //this.bgImage = toastBG.GetComponent<Image>();
+            Stop,
+            Appearing,
+            Disappearing
+        }
 
-            //this.alphaReductionValue = toastDuration == Toasts.ToastDuration.Short ? ALPHA_REDUCTION_VALUE_SHORT : ALPHA_REDUCTION_VALUE_LONG;
+        private float tempAlpha;
+        private float totalDuration;
 
-            //animate = true;
+        internal void DisplayToast(string displayText, Toasts.ToastDuration toastDuration)
+        {
+            this.animationState = AnimationState.Stop;
+
+            this.totalDuration = toastDuration == Toasts.ToastDuration.Short ? DURATION_SHORT : DURATION_LONG;
 
             CreateText(displayText);
             StartCoroutine(CheckForDimensions());
@@ -51,7 +48,6 @@ namespace UnityToasts
             float maxWidth = Screen.width * 0.7f;
             if (this.gameObject.GetComponent<RectTransform>().sizeDelta.x > maxWidth)
             {
-                Debug.Log("Restrict width");
                 this.gameObject.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
                 this.gameObject.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxWidth);
             }
@@ -59,18 +55,20 @@ namespace UnityToasts
             yield return new WaitForEndOfFrame();
 
             float maxHeight = Screen.height * 0.5f;
-            Debug.Log(this.gameObject.GetComponent<RectTransform>().sizeDelta.y + " : " + maxHeight);
             if (this.gameObject.GetComponent<RectTransform>().sizeDelta.y > maxHeight)
             {
-                Debug.Log("Restrict height");
                 this.gameObject.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
                 this.gameObject.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, maxHeight);
             }
+
+            yield return new WaitForEndOfFrame();
+
+            this.animationState = AnimationState.Appearing;
         }
 
         private void CreateText(string displayText)
         {
-            textGO = new GameObject();
+            GameObject textGO = new GameObject();
             textGO.name = TOASTS_TEXT;
             textGO.transform.parent = this.transform;
 
@@ -79,21 +77,50 @@ namespace UnityToasts
 
             Text text = textGO.AddComponent<Text>();
             text.text = displayText;
-            text.color = Color.black;
+            Color color = Color.black;
+            color.a = 0;
+            text.color = color;
             text.fontSize = 25;
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
             text.verticalOverflow = VerticalWrapMode.Truncate;
 
             text.font = Resources.GetBuiltinResource(typeof(Font), DEFAULT_FONT_NAME) as Font;
 
-            //rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, text.preferredWidth);
-            //rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, text.preferredHeight);
-
             this.textBox = text;
         }
 
         private void Update()
         {
+            if (this.animationState == AnimationState.Appearing)
+            {
+                if (this.gameObject.GetComponent<Image>().color.a < 1)
+                {
+                    this.tempAlpha += Time.deltaTime / this.totalDuration;
+                    Color tempColor = this.gameObject.GetComponent<Image>().color;
+                    tempColor.a = this.tempAlpha;
+                    this.textBox.color = new Color(this.textBox.color.r, this.textBox.color.g, this.textBox.color.b, tempColor.a);
+                    this.gameObject.GetComponent<Image>().color = tempColor;
+                }
+                else
+                {
+                    this.animationState = AnimationState.Disappearing;
+                }
+            }
+            else if (this.animationState == AnimationState.Disappearing)
+            {
+                if (this.gameObject.GetComponent<Image>().color.a > 0)
+                {
+                    this.tempAlpha -= Time.deltaTime / this.totalDuration;
+                    Color tempColor = this.gameObject.GetComponent<Image>().color;
+                    tempColor.a = this.tempAlpha;
+                    this.textBox.color = new Color(this.textBox.color.r, this.textBox.color.g, this.textBox.color.b, tempColor.a);
+                    this.gameObject.GetComponent<Image>().color = tempColor;
+                }
+                else
+                {
+                    this.animationState = AnimationState.Stop;
+                }
+            }
         }
     }
 }
