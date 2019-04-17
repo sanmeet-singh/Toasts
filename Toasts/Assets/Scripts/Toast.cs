@@ -23,6 +23,8 @@ namespace UnityToasts
 
         private AnimationState animationState;
 
+        private Color tempColor;
+
         private enum AnimationState
         {
             Stop,
@@ -82,9 +84,9 @@ namespace UnityToasts
 
             Text text = textGO.AddComponent<Text>();
             text.text = displayText;
-            Color color = Color.black;
-            color.a = 0;
-            text.color = color;
+            this.tempColor = Color.black;
+            this.tempColor.a = 0;
+            text.color = this.tempColor;
             text.fontSize = 25;
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
             text.verticalOverflow = VerticalWrapMode.Truncate;
@@ -102,12 +104,15 @@ namespace UnityToasts
                 {
                     this.tempAlpha += Time.deltaTime / this.totalDuration;
 
-                    Color tempColor = this.gameObject.GetComponent<Image>().color;
-                    tempColor.a = this.tempAlpha;
-
-                    this.textBox.color = new Color(this.textBox.color.r, this.textBox.color.g, this.textBox.color.b, tempColor.a);
+                    this.tempColor = this.image.color;
+                    this.tempColor.a = this.tempAlpha;
 
                     this.image.color = tempColor;
+
+                    this.tempColor = this.textBox.color;
+                    this.tempColor.a = this.tempAlpha * 2;
+
+                    this.textBox.color = this.tempColor;
                 }
                 else
                 {
@@ -120,12 +125,15 @@ namespace UnityToasts
                 {
                     this.tempAlpha -= Time.deltaTime / this.totalDuration;
 
-                    Color tempColor = this.gameObject.GetComponent<Image>().color;
-                    tempColor.a = this.tempAlpha;
-
-                    this.textBox.color = new Color(this.textBox.color.r, this.textBox.color.g, this.textBox.color.b, tempColor.a);
+                    this.tempColor = this.image.color;
+                    this.tempColor.a = this.tempAlpha;
 
                     this.image.color = tempColor;
+
+                    this.tempColor = this.textBox.color;
+                    this.tempColor.a = this.tempAlpha;
+
+                    this.textBox.color = this.tempColor;
                 }
                 else
                 {

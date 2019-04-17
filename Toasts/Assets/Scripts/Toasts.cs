@@ -17,6 +17,13 @@ namespace UnityToasts
             Long
         }
 
+        public enum ToastAlignment
+        {
+            Top,
+            Centre,
+            Bottom
+        }
+
         public static void CreateToast(string displayText, ToastDuration toastDuration)
         {
             Transform canvas = CreateCanvas().transform;
@@ -35,6 +42,8 @@ namespace UnityToasts
 
             RectTransform rectTransform = toastGO.AddComponent<RectTransform>();
             rectTransform.localPosition = new Vector3(0, 0, 0);
+
+            //set anchors
 
             //Content size fitter
             ContentSizeFitter contentSizeFitter = toastGO.AddComponent<ContentSizeFitter>();
@@ -64,7 +73,6 @@ namespace UnityToasts
 
             RectTransform rectTransform = backgroundGO.AddComponent<RectTransform>();
             rectTransform.localPosition = new Vector3(0, 0, 0);
-            rectTransform.sizeDelta = new Vector2(322, 64);
 
             Image image = backgroundGO.AddComponent<Image>();
             image.color = Color.yellow;
