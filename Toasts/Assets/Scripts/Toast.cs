@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace UnityToasts
 {
+    [RequireComponent(typeof(Image))]
     public class Toast : MonoBehaviour
     {
         public const float DURATION_SHORT = 2f;
@@ -17,6 +18,8 @@ namespace UnityToasts
         public const string DEFAULT_FONT_NAME = "Arial.ttf";
 
         private Text textBox;
+
+        private Image image;
 
         private AnimationState animationState;
 
@@ -35,6 +38,8 @@ namespace UnityToasts
             this.animationState = AnimationState.Stop;
 
             this.totalDuration = toastDuration == Toasts.ToastDuration.Short ? DURATION_SHORT : DURATION_LONG;
+
+            this.image = this.gameObject.GetComponent<Image>();
 
             CreateText(displayText);
             StartCoroutine(CheckForDimensions());
@@ -93,13 +98,16 @@ namespace UnityToasts
         {
             if (this.animationState == AnimationState.Appearing)
             {
-                if (this.gameObject.GetComponent<Image>().color.a < 1)
+                if (this.image.color.a < 1)
                 {
                     this.tempAlpha += Time.deltaTime / this.totalDuration;
+
                     Color tempColor = this.gameObject.GetComponent<Image>().color;
                     tempColor.a = this.tempAlpha;
+
                     this.textBox.color = new Color(this.textBox.color.r, this.textBox.color.g, this.textBox.color.b, tempColor.a);
-                    this.gameObject.GetComponent<Image>().color = tempColor;
+
+                    this.image.color = tempColor;
                 }
                 else
                 {
@@ -108,13 +116,16 @@ namespace UnityToasts
             }
             else if (this.animationState == AnimationState.Disappearing)
             {
-                if (this.gameObject.GetComponent<Image>().color.a > 0)
+                if (this.image.color.a > 0)
                 {
                     this.tempAlpha -= Time.deltaTime / this.totalDuration;
+
                     Color tempColor = this.gameObject.GetComponent<Image>().color;
                     tempColor.a = this.tempAlpha;
+
                     this.textBox.color = new Color(this.textBox.color.r, this.textBox.color.g, this.textBox.color.b, tempColor.a);
-                    this.gameObject.GetComponent<Image>().color = tempColor;
+
+                    this.image.color = tempColor;
                 }
                 else
                 {
