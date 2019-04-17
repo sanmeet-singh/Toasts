@@ -9,9 +9,7 @@ namespace UnityToasts
     {
         public const string CANVAS_NAME = "ToastsCanvas";
         public const string TOASTS_NAME = "Toast";
-        public const string TOASTS_TEXT = "ToastText";
         public const string TOASTS_BG = "ToastBG";
-        public const string DEFAULT_FONT_NAME = "Arial.ttf";
 
         public enum ToastDuration
         {
@@ -25,11 +23,13 @@ namespace UnityToasts
 
             GameObject parentGO = CreateToastGameObject(canvas);
 
-            GameObject backgroundGO = CreateBG(parentGO.transform);
-            GameObject textGO = CreateText(parentGO.transform, displayText);
+            //GameObject backgroundGO = CreateBG(parentGO.transform);
+            //GameObject textGO = CreateText(parentGO.transform, displayText);
+
+            //UpdateDimensions(backgroundGO);
 
             Toast toast = parentGO.AddComponent<Toast>();
-            toast.StartAnimation(textGO, backgroundGO, toastDuration);
+            toast.StartAnimation(displayText, toastDuration);
         }
 
         private static GameObject CreateToastGameObject(Transform parent)
@@ -40,6 +40,21 @@ namespace UnityToasts
 
             RectTransform rectTransform = toastGO.AddComponent<RectTransform>();
             rectTransform.localPosition = new Vector3(0, 0, 0);
+
+            //Content size fitter
+            ContentSizeFitter contentSizeFitter = toastGO.AddComponent<ContentSizeFitter>();
+            contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            ////Horizontal layout
+            VerticalLayoutGroup verticalLayoutGroup = toastGO.AddComponent<VerticalLayoutGroup>();
+            verticalLayoutGroup.childControlWidth = true;
+            verticalLayoutGroup.childControlHeight = true;
+            verticalLayoutGroup.childForceExpandWidth = false;
+            verticalLayoutGroup.childForceExpandHeight = false;
+
+            Image image = toastGO.AddComponent<Image>();
+            image.color = Color.yellow;
 
             return toastGO;
         }
@@ -52,29 +67,40 @@ namespace UnityToasts
 
             RectTransform rectTransform = backgroundGO.AddComponent<RectTransform>();
             rectTransform.localPosition = new Vector3(0, 0, 0);
+            rectTransform.sizeDelta = new Vector2(322, 64);
 
             Image image = backgroundGO.AddComponent<Image>();
             image.color = Color.yellow;
 
+            ////Content size fitter
+            //ContentSizeFitter contentSizeFitter = backgroundGO.AddComponent<ContentSizeFitter>();
+            //contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            //contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
+
+            //////Horizontal layout
+            //VerticalLayoutGroup verticalLayoutGroup = backgroundGO.AddComponent<VerticalLayoutGroup>();
+            //verticalLayoutGroup.childControlWidth = true;
+            //verticalLayoutGroup.childControlHeight = true;
+            //verticalLayoutGroup.childForceExpandWidth = false;
+            //verticalLayoutGroup.childForceExpandHeight = false;
+
             return backgroundGO;
         }
 
-        private static GameObject CreateText(Transform parent, string displayText)
-        {
-            GameObject textGO = new GameObject();
-            textGO.name = TOASTS_TEXT;
-            textGO.transform.parent = parent;
-
-            RectTransform rectTransform = textGO.AddComponent<RectTransform>();
-            rectTransform.localPosition = new Vector3(0, 0, 0);
-
-            Text text = textGO.AddComponent<Text>();
-            text.text = displayText;
-            text.color = Color.black;
-            text.font = Resources.GetBuiltinResource(typeof(Font), DEFAULT_FONT_NAME) as Font;
-
-            return textGO;
-        }
+        //private static void UseTextGenerator(string displayText, TextGenerationSettings settings, RectTransform textBox)
+        //{
+        //    //TextGenerationSettings settings = new TextGenerationSettings();
+        //    //settings.color = Color.black;
+        //    //settings.font = Resources.GetBuiltinResource(typeof(Font), DEFAULT_FONT_NAME) as Font;
+        //    //settings.fontSize = 18;
+        //    ////settings.
+        //    //settings.generateOutOfBounds = true;
+        //    //settings.horizontalOverflow = HorizontalWrapMode.Overflow;
+        //    ////settings.resizeTextForBestFit = true;
+        //    //settings.verticalOverflow = VerticalWrapMode.Overflow;
+        //    TextGenerator textGenerator = new TextGenerator();
+        //    Debug.Log("TG : " + textGenerator.GetPreferredWidth(displayText, settings) + " : " + textGenerator.GetPreferredHeight(displayText, settings));
+        //}
 
         private static GameObject CreateCanvas()
         {
