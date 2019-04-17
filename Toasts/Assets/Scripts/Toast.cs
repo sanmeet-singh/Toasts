@@ -169,6 +169,7 @@ namespace UnityToasts
                 else
                 {
                     this.animationState = AnimationState.Stop;
+                    Destroy(this.transform.parent.gameObject);
                 }
             }
         }
