@@ -43,6 +43,8 @@ namespace UnityToasts
         public Color toastTextColor = Color.black;
 
         public int fontSize = 25;
+
+        public Font toastFont;
         #endregion
     }
 }

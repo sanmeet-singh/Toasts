@@ -122,7 +122,7 @@ namespace UnityToasts
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
             text.verticalOverflow = VerticalWrapMode.Truncate;
 
-            text.font = Resources.GetBuiltinResource(typeof(Font), DEFAULT_FONT_NAME) as Font;
+            text.font = ToastSettings.Instance.toastFont == null ? Resources.GetBuiltinResource(typeof(Font), DEFAULT_FONT_NAME) as Font : ToastSettings.Instance.toastFont;
 
             this.textBox = text;
         }
