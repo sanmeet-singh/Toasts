@@ -56,26 +56,11 @@ namespace UnityToasts
             verticalLayoutGroup.childForceExpandHeight = false;
 
             Image image = toastGO.AddComponent<Image>();
-            Color bgColor = Color.yellow;
+            Color bgColor = ToastSettings.Instance.toastBackgroundColor;
             bgColor.a = 0;
             image.color = bgColor;
 
             return toastGO;
-        }
-
-        private static GameObject CreateBG(Transform parent)
-        {
-            GameObject backgroundGO = new GameObject();
-            backgroundGO.name = TOASTS_BG;
-            backgroundGO.transform.parent = parent;
-
-            RectTransform rectTransform = backgroundGO.AddComponent<RectTransform>();
-            rectTransform.localPosition = new Vector3(0, 0, 0);
-
-            Image image = backgroundGO.AddComponent<Image>();
-            image.color = Color.yellow;
-
-            return backgroundGO;
         }
 
         private static GameObject CreateCanvas()

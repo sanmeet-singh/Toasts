@@ -8,7 +8,7 @@ public class ToastsTest : MonoBehaviour
     void Start()
     {
         UnityToasts.Toasts.CreateToast("This is first toast. I hope it will look good on screen.", UnityToasts.Toasts.ToastDuration.Long, UnityToasts.Toasts.ToastAlignment.Top);
-        //UnityToasts.Toasts.CreateToast("This is first toast. I hope it will look good on screen.", UnityToasts.Toasts.ToastDuration.Long, UnityToasts.Toasts.ToastAlignment.Bottom);
+        //UnityToasts.Toasts.CreateToast("This is first toast. I hope it will look good on screen.", UnityToasts.Toasts.ToastDuration.Short, UnityToasts.Toasts.ToastAlignment.Bottom);
         //UnityToasts.Toasts.CreateToast("This is first toast. I hope it will look good on screen.", UnityToasts.Toasts.ToastDuration.Long, UnityToasts.Toasts.ToastAlignment.Centre);
     }
 

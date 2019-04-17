@@ -115,10 +115,10 @@ namespace UnityToasts
 
             Text text = textGO.AddComponent<Text>();
             text.text = displayText;
-            this.tempColor = Color.black;
+            this.tempColor = ToastSettings.Instance.toastTextColor;
             this.tempColor.a = 0;
             text.color = this.tempColor;
-            text.fontSize = 25;
+            text.fontSize = ToastSettings.Instance.fontSize;
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
             text.verticalOverflow = VerticalWrapMode.Truncate;
 
