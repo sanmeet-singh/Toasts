@@ -35,7 +35,7 @@ namespace UnityToasts
         private float tempAlpha;
         private float totalDuration;
 
-        internal void DisplayToast(string displayText, Toasts.ToastDuration toastDuration)
+        internal void DisplayToast(string displayText, Toasts.ToastDuration toastDuration, Toasts.ToastAlignment toastAlignment)
         {
             this.animationState = AnimationState.Stop;
 
@@ -44,10 +44,10 @@ namespace UnityToasts
             this.image = this.gameObject.GetComponent<Image>();
 
             CreateText(displayText);
-            StartCoroutine(CheckForDimensions());
+            StartCoroutine(CheckForDimensions(toastAlignment));
         }
 
-        private IEnumerator CheckForDimensions()
+        private IEnumerator CheckForDimensions(Toasts.ToastAlignment toastAlignment)
         {
             yield return new WaitForEndOfFrame();
 
@@ -70,7 +70,38 @@ namespace UnityToasts
 
             yield return new WaitForEndOfFrame();
 
+            SetToastAlignment(toastAlignment);
+
             this.animationState = AnimationState.Appearing;
+        }
+
+        private void SetToastAlignment(Toasts.ToastAlignment toastAlignment)
+        {
+            RectTransform rectTransform = this.gameObject.GetComponent<RectTransform>();
+            //set anchors
+            switch (toastAlignment)
+            {
+                case Toasts.ToastAlignment.Top:
+                    rectTransform.anchorMin = new Vector2(0.5f, 1);
+                    rectTransform.anchorMax = new Vector2(0.5f, 1);
+                    rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                    rectTransform.anchoredPosition3D = new Vector3(0, -rectTransform.sizeDelta.y);
+                    break;
+
+                case Toasts.ToastAlignment.Bottom:
+                    rectTransform.anchorMin = new Vector2(0.5f, 0);
+                    rectTransform.anchorMax = new Vector2(0.5f, 0);
+                    rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                    rectTransform.anchoredPosition3D = new Vector3(0, rectTransform.sizeDelta.y);
+                    break;
+
+                default:
+                    rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+                    rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+                    rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                    rectTransform.anchoredPosition3D = new Vector3(0, 0, 0);
+                    break;
+            }
         }
 
         private void CreateText(string displayText)

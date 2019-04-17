@@ -24,17 +24,17 @@ namespace UnityToasts
             Bottom
         }
 
-        public static void CreateToast(string displayText, ToastDuration toastDuration)
+        public static void CreateToast(string displayText, ToastDuration toastDuration, ToastAlignment toastAlignment)
         {
             Transform canvas = CreateCanvas().transform;
 
-            GameObject parentGO = CreateToastGameObject(canvas);
+            GameObject parentGO = CreateToastGameObject(canvas, toastAlignment);
 
             Toast toast = parentGO.AddComponent<Toast>();
-            toast.DisplayToast(displayText, toastDuration);
+            toast.DisplayToast(displayText, toastDuration, toastAlignment);
         }
 
-        private static GameObject CreateToastGameObject(Transform parent)
+        private static GameObject CreateToastGameObject(Transform parent, ToastAlignment toastAlignment)
         {
             GameObject toastGO = new GameObject();
             toastGO.name = TOASTS_NAME;
@@ -42,8 +42,6 @@ namespace UnityToasts
 
             RectTransform rectTransform = toastGO.AddComponent<RectTransform>();
             rectTransform.localPosition = new Vector3(0, 0, 0);
-
-            //set anchors
 
             //Content size fitter
             ContentSizeFitter contentSizeFitter = toastGO.AddComponent<ContentSizeFitter>();
