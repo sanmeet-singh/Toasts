@@ -11,6 +11,8 @@ namespace UnityToasts
         public const string TOASTS_NAME = "Toast";
         public const string TOASTS_BG = "ToastBG";
 
+        public const int VERTICAL_LAYOUT_PADDING = 12;
+
         public enum ToastDuration
         {
             Short,
@@ -55,10 +57,13 @@ namespace UnityToasts
             verticalLayoutGroup.childForceExpandWidth = false;
             verticalLayoutGroup.childForceExpandHeight = false;
 
+            verticalLayoutGroup.padding = new RectOffset(VERTICAL_LAYOUT_PADDING, VERTICAL_LAYOUT_PADDING, VERTICAL_LAYOUT_PADDING, VERTICAL_LAYOUT_PADDING);
+
             Image image = toastGO.AddComponent<Image>();
             Color bgColor = ToastSettings.Instance.toastBackgroundColor;
             bgColor.a = 0;
             image.color = bgColor;
+            image.raycastTarget = false;
 
             return toastGO;
         }
