@@ -28,12 +28,19 @@ namespace UnityToasts
 
         public static void CreateToast(string displayText, ToastDuration toastDuration, ToastAlignment toastAlignment)
         {
-            Transform canvas = CreateCanvas().transform;
+            if (string.IsNullOrEmpty(displayText))
+            {
+                Debug.Log("Display Text is Null/Empty.");
+            }
+            else
+            {
+                Transform canvas = CreateCanvas().transform;
 
-            GameObject parentGO = CreateToastGameObject(canvas, toastAlignment);
+                GameObject parentGO = CreateToastGameObject(canvas, toastAlignment);
 
-            Toast toast = parentGO.AddComponent<Toast>();
-            toast.DisplayToast(displayText, toastDuration, toastAlignment);
+                Toast toast = parentGO.AddComponent<Toast>();
+                toast.DisplayToast(displayText, toastDuration, toastAlignment);
+            }
         }
 
         private static GameObject CreateToastGameObject(Transform parent, ToastAlignment toastAlignment)
